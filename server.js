@@ -55,6 +55,11 @@ app.put('/product/:productId', function (req, res, next) {//this will take req.q
   })
 })
 
+app.delete('/product/:productId', function (req, res, next) {
+  db.delete_product([req.params.productId], function(err, result) {
+    res.send(result)
+  })
+})
 
 app.listen(port, function () {
   console.log('listening on :', port);
