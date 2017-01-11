@@ -3,17 +3,39 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var port = 3000;
 
+var app = module.exports = express();
+
 var massive = require('massive');
 var connectionString = "postgres://massive:Forces$57@localhost/massive_demo";
+app.set('db', massiveInstance);
+var db = app.get('db');
+var massiveInstance = massive.connectSync({connectionString : connectionString});
 
-var app = module.exports = express();
+// var db = massive.connectSync({
+//   connectionString : 'postgres://massive:Forces$57@localhost/massive_demo'
+// });
+
 app.use(bodyParser.json());
 app.use(cors());
 
-var massiveInstance = massive.connectSync({connectionString : connectionString});
-app.set('db', massiveInstance);
 
-var db = app.get('db');
+
+
+app.post('/products', function (req, res, next) {
+  let product = req.body
+  db.create_product([product.Name, product.Description, product.Price, product.Imageurl], function (err, result) {
+    if (err) {
+      res.status(500).send(err)
+    } else {
+      console.log(result);
+      res.json(result)
+    }
+  })
+});
+
+
+
+
 
 app.listen(port, function () {
   console.log('listening on :', port);
