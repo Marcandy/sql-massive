@@ -6,14 +6,15 @@ var port = 3000;
 var app = module.exports = express();
 
 var massive = require('massive');
-var connectionString = "postgres://massive:Forces$57@localhost/massive_demo";
-app.set('db', massiveInstance);
-var db = app.get('db');
-var massiveInstance = massive.connectSync({connectionString : connectionString});
+// var connectionString = "postgres://massive:Forces$57@localhost/massive_demo";
+// var massiveInstance = massive.connectSync({connectionString : connectionString});
+// var db = app.get('db');
+// app.set('db', massiveInstance);
 
-// var db = massive.connectSync({
-//   connectionString : 'postgres://massive:Forces$57@localhost/massive_demo'
-// });
+
+var db = massive.connectSync({
+  connectionString : 'postgres://massive:Forces$57@localhost/massive_demo'
+});
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -28,12 +29,20 @@ app.post('/products', function (req, res, next) {
       res.status(500).send(err)
     } else {
       console.log(result);
-      res.json(result)
+      res.send(result)
     }
   })
 });
 
-
+app.get('/products', function(req, res, next) {
+  db.read_products(function (err, result) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.send(result);
+    }
+  })
+})
 
 
 
