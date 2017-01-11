@@ -49,6 +49,12 @@ app.get('/product', function (req, res, next) {
   })
 })
 
+app.put('/product/:productId', function (req, res, next) {//this will take req.query
+  db.update_product([req.query.desc, req.params.productId], function (err, result) {
+    res.send(result);
+  })
+})
+
 
 app.listen(port, function () {
   console.log('listening on :', port);
