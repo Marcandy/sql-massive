@@ -11,3 +11,14 @@ INSERT INTO products (Name, Description, Price, Imageurl) VALUES
  ('Burrito','food to eat', '5', 'to infinity')
 
  SELECT p.Name, p.Price, p.Imageurl FROM products p
+
+ INSERT INTO products (Name, Description, Price, Imageurl)
+ VALUES($1, $2, $3, $4)
+ RETURNING id
+
+ DELETE FROM products
+ WHERE id = $1
+ RETURNING Name
+
+ SELECT * FROM products p
+ WHERE p.id = $1

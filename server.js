@@ -11,6 +11,8 @@ var massiveInstance = massive.connectSync({connectionString : connectionString})
 app.set('db', massiveInstance);
 var db = app.get('db');
 
+var products = require('./productsCtrl.js');
+
 // var db = massive.connectSync({
 //   connectionString : 'postgres://massive:Forces$57@localhost/massive_demo'
 // });
@@ -21,45 +23,15 @@ app.use(cors());
 
 
 
-app.post('/products', function (req, res, next) {
-  let product = req.body
-  db.create_product([product.Name, product.Description, product.Price, product.Imageurl], function (err, result) {
-    if (err) {
-      res.status(500).send(err)
-    } else {
-      console.log(result);
-      res.send(result)
-    }
-  })
-});
+app.post('/products', products.Create);
 
-app.get('/products', function(req, res, next) {
-  db.read_products(function (err, result) {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.send(result);
-    }
-  })
-})
+app.get('/products', products.GetAll)
 
-app.get('/product', function (req, res, next) {
-  db.read_product([req.query.id], function (err, result) {
-    res.send(result)
-  })
-})
+app.get('/product', products.GetOne)
 
-app.put('/product/:productId', function (req, res, next) {//this will take req.query
-  db.update_product([req.query.desc, req.params.productId], function (err, result) {
-    res.send(result);
-  })
-})
+app.put('/product/:productId', products.Update)
 
-app.delete('/product/:productId', function (req, res, next) {
-  db.delete_product([req.params.productId], function(err, result) {
-    res.send(result)
-  })
-})
+app.delete('/product/:productId', products.Delete)
 
 app.listen(port, function () {
   console.log('listening on :', port);
